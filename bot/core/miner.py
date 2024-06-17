@@ -1,4 +1,6 @@
 import time
+from random import randint
+from time import sleep
 import asyncio
 import dateutil.parser
 from urllib.parse import quote, unquote
@@ -288,6 +290,7 @@ class Miner:
 
                         can_claim = self.is_claim_possible(farm_info=farm_info)
                         if can_claim:
+                            sleep(randint(2,7))
                             claim_info = await self.claim(http_client=http_client)
                             balance = claim_info['tokens']
                             logger.info(f"{self.session_name} | Claimed successfully, new balance is <c>{balance: .6f}</c>")
@@ -306,6 +309,7 @@ class Miner:
                                 else:
                                     if balance >= w_price:
                                         logger.info(f"{self.session_name} | Speed (workbench) upgrade is possible, trying to upgrade")
+                                        sleep(randint(2,7))
                                         w_upgrade_info = await self.upgrade_speed(http_client=http_client)
                                         if w_upgrade_info:
                                             profile_info = await self.profile(http_client=http_client)
@@ -329,6 +333,7 @@ class Miner:
                                 else:
                                     if balance >= t_price:
                                         logger.info(f"{self.session_name} | Storage (toolkit) upgrade is possible, trying to upgrade")
+                                        sleep(randint(2,7))
                                         t_upgrade_info = await self.upgrade_storage(http_client=http_client)
                                         if t_upgrade_info:
                                             profile_info = await self.profile(http_client=http_client)
