@@ -312,6 +312,7 @@ class Miner:
                                         sleep(randint(2,7))
                                         w_upgrade_info = await self.upgrade_speed(http_client=http_client)
                                         if w_upgrade_info:
+                                            sleep(randint(1,4))
                                             profile_info = await self.profile(http_client=http_client)
                                             balance = profile_info['tokens']
                                             w_level = w_upgrade_info['workbenchLevel']
@@ -336,6 +337,7 @@ class Miner:
                                         sleep(randint(2,7))
                                         t_upgrade_info = await self.upgrade_storage(http_client=http_client)
                                         if t_upgrade_info:
+                                            sleep(randint(1,4))
                                             profile_info = await self.profile(http_client=http_client)
                                             balance = profile_info['tokens']
                                             t_level = t_upgrade_info['toolkitLevel']
