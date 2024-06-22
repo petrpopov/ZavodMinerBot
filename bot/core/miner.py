@@ -260,7 +260,7 @@ class Miner:
         return -2
 
     async def run(self, proxy: str | None) -> None:
-        logged_in = False
+        access_token_created_time = 0
         sleep_time = settings.DEFAULT_SLEEP
         proxy_conn = ProxyConnector().from_url(proxy) if proxy else None
 
@@ -270,9 +270,10 @@ class Miner:
 
             while True:
                 try:
-                    if not logged_in:
+                    if time.time() - access_token_created_time >= 3600:
                         tg_web_data = await self.get_tg_web_data(proxy=proxy)
-                        logged_in = True
+
+                        access_token_created_time = time.time()
 
                         http_client.headers["Telegram-Init-Data"] = tg_web_data
                         headers["Telegram-Init-Data"] = tg_web_data
