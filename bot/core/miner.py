@@ -50,8 +50,8 @@ class Miner:
                     raise InvalidSession(self.session_name)
 
             web_view = await self.tg_client.invoke(RequestWebView(
-                peer=await self.tg_client.resolve_peer('Marswallet_bot'),
-                bot=await self.tg_client.resolve_peer('Marswallet_bot'),
+                peer=await self.tg_client.resolve_peer('Mdaowalletbot'),
+                bot=await self.tg_client.resolve_peer('Mdaowalletbot'),
                 platform='android',
                 from_bot_menu=True,
                 url='https://zavod.mdaowallet.com/'
@@ -92,6 +92,21 @@ class Miner:
             logger.info(f"{self.session_name} | Proxy IP: {ip}")
         except Exception as error:
             logger.error(f"{self.session_name} | Proxy: {proxy} | Error: {error}")
+
+    async def telegram_profile(self, http_client: aiohttp.ClientSession) -> Dict[str, Any]:
+        try:
+            response = await http_client.get(
+                url='https://telegram-api.mdaowallet.com/user/profile',
+                json={})
+            response.raise_for_status()
+
+            response_json = await response.json()
+            profile_info = response_json
+
+            return profile_info
+        except Exception as error:
+            logger.error(f"{self.session_name} | Unknown error getting telegram profile: {error}")
+            await asyncio.sleep(delay=7)
 
     async def profile(self, http_client: aiohttp.ClientSession) -> Dict[str, Any]:
         try:
@@ -278,6 +293,7 @@ class Miner:
                         http_client.headers["Telegram-Init-Data"] = tg_web_data
                         headers["Telegram-Init-Data"] = tg_web_data
 
+                    t_profile = await self.telegram_profile(http_client=http_client)
                     profile_info = await self.profile(http_client=http_client)
                     if not profile_info:
                         logger.error(f"{self.session_name} | Cannot get profile info")
